@@ -65,7 +65,7 @@ VALUES
 INSERT INTO
     replies (body, u_id, q_id, r_id) 
 VALUES 
-    ('no', (SELECT id FROM users WHERE fname = 'cal'),(SELECT id FROM questions WHERE title = 'wigs'), NULL);
+    ('no', (SELECT id FROM users WHERE fname = 'ed'),(SELECT id FROM questions WHERE title = 'wigs'), NULL);
 
 INSERT INTO
     replies (body, u_id, q_id, r_id) 
