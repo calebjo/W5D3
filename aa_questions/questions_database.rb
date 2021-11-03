@@ -57,6 +57,10 @@ class User
     def authored_replies
         Reply.find_by_user_id(@id)
     end
+
+    def followed_questions
+        QuestionFollow.followed_questions_for_user_id(@id)
+    end
 end
 
 class Question
@@ -105,6 +109,14 @@ class Question
 
     def replies
         Reply.find_by_question_id(@id)
+    end
+
+    def followers
+        QuestionFollow.followers_for_question_id(@id)
+    end
+
+    def self.most_followed(n)
+        QuestionFollow.most_followed_questions(n)
     end
 end
 
@@ -234,6 +246,24 @@ class QuestionFollow
             question_follows.u_id = ?
         SQL
 
+        questions = []
+        result.each {|res|questions << Question.new(res)}
+        questions.length == 1 ? questions.first : questions
+    end
+
+    def self.most_followed_questions(n)
+        result = QuestionsDatabase.instance.execute(<<-SQL, n)
+            SELECT
+                *
+            FROM
+                questions
+            JOIN 
+                question_follows ON questions.id = question_follows.q_id
+
+                GROUP BY questions.id 
+                ORDER BY COUNT (question_follows.u_id) ASC
+                LIMIT ?
+        SQL
         questions = []
         result.each {|res|questions << Question.new(res)}
         questions.length == 1 ? questions.first : questions
