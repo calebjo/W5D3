@@ -19,7 +19,7 @@ class User
         @lname = options['lname']
     end
 
-    def find_by_id(id)
+    def self.find_by_id(id)
         user = QuestionsDatabase.instance.execute(<<-SQL, id)
         SELECT
             *
@@ -33,7 +33,7 @@ class User
         User.new(user.first)
     end
 
-    def find_by_name(fname, lname)
+    def self.find_by_name(fname, lname)
         user = QuestionsDatabase.instance.execute(<<-SQL, fname, lname)
         SELECT
             *
@@ -55,6 +55,7 @@ class User
 
     # use Reply::find_by_user_id
     def authored_replies
+        Reply.find_by_user_id(@id)
     end
 end
 
@@ -68,7 +69,7 @@ class Question
         @u_id = options['u_id']
     end
 
-    def find_by_id(id)
+    def self.find_by_id(id)
         question = QuestionsDatabase.instance.execute(<<-SQL, id)
         SELECT
             *
@@ -82,7 +83,7 @@ class Question
         Question.new(question.first)
     end
 
-    def find_by_author_id(id)
+    def self.find_by_author_id(id)
         question = QuestionsDatabase.instance.execute(<<-SQL, id)
         SELECT
             *
@@ -94,6 +95,10 @@ class Question
         return nil unless question.length > 0
 
         question.each {|rep|Question.new(rep)}
+    end
+
+    def author
+        User.find_by_id(@u_id)
     end
 end
 
@@ -108,7 +113,7 @@ class Reply
         @r_id = options['r_id']
     end
 
-    def find_by_id(id)
+    def self.find_by_id(id)
         reply = QuestionsDatabase.instance.execute(<<-SQL, id)
         SELECT
             *
@@ -122,7 +127,7 @@ class Reply
         Reply.new(reply.first)
     end
 
-    def find_by_user_id(u_id)
+    def self.find_by_user_id(u_id)
         reply = QuestionsDatabase.instance.execute(<<-SQL, u_id)
         SELECT
             *
@@ -136,7 +141,7 @@ class Reply
         reply.each {|rep|Reply.new(rep)}
     end
 
-    def find_by_question_id(q_id)
+    def self.find_by_question_id(q_id)
         reply = QuestionsDatabase.instance.execute(<<-SQL, q_id)
         SELECT
             *
