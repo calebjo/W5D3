@@ -48,25 +48,14 @@ class User
         User.new(user.first)
     end
 
-    # # use Question::find_by_author_id
-    # def authored_questions
-    #     user = QuestionsDatabase.instance.execute(<<-SQL, fname, lname)
-    #     SELECT
-    #         *
-    #     FROM
-    #         users
-    #     WHERE
-    #         fname = ? AND
-    #         lname = ?
-    #     SQL
-    #     return nil unless user.length > 0
+    # use Question::find_by_author_id
+    def authored_questions
+        Question.find_by_author_id(@id)
+    end
 
-    #     User.new(user.first)
-    # end
-
-    # # use Reply::find_by_user_id
-    # def authored_replies
-    # end
+    # use Reply::find_by_user_id
+    def authored_replies
+    end
 end
 
 class Question
@@ -104,7 +93,7 @@ class Question
         SQL
         return nil unless question.length > 0
 
-        Question.new(question.first)
+        question.each {|rep|Question.new(rep)}
     end
 end
 
@@ -144,7 +133,7 @@ class Reply
         SQL
         return nil unless reply.length > 0
 
-        Reply.new(reply.first)
+        reply.each {|rep|Reply.new(rep)}
     end
 
     def find_by_question_id(q_id)
@@ -158,8 +147,7 @@ class Reply
         SQL
         return nil unless reply.length > 0
 
-        
-        Reply.new(reply.first)
+        reply.each {|rep|Reply.new(rep)}
     end
 end
 
