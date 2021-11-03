@@ -84,3 +84,12 @@ INSERT INTO
     replies (body, u_id, q_id, r_id) 
 VALUES 
     ('a reply to a test reply', (SELECT id FROM users WHERE fname = 'Caleb'),(SELECT id FROM questions WHERE title = 'wigs'), (SELECT id FROM replies WHERE body = 'this is a test reply'));
+INSERT INTO
+    question_follows (u_id, q_id)
+VALUES
+    (1,1),
+    (2,1),
+    (3,1),
+    (4,1),
+    (1,2),
+    (2,2);

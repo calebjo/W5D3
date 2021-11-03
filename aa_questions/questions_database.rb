@@ -202,6 +202,23 @@ class QuestionFollow
         @u_id = options['u_id']
         @q_id = options['q_id']
     end
+
+    def self.followers_for_question_id(q_id)
+        result = QuestionsDatabase.instance.execute(<<-SQL, q_id)
+        SELECT distinct
+            *
+        FROM
+            users
+            JOIN 
+            question_follows ON users.id AND question_follows.u_id
+        WHERE
+            q_id = ?
+        SQL
+
+        followers = []
+        result.each {|rep|followers << User.new(rep)}
+        followers.length == 1 ? followers.first : followers
+    end
 end
 
 class QuestionLike
