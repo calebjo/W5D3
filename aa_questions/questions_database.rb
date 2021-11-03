@@ -205,12 +205,12 @@ class QuestionFollow
 
     def self.followers_for_question_id(q_id)
         result = QuestionsDatabase.instance.execute(<<-SQL, q_id)
-        SELECT distinct
+        SELECT
             *
         FROM
-            users
-            JOIN 
-            question_follows ON users.id AND question_follows.u_id
+            question_follows
+        JOIN 
+            users ON users.id = question_follows.u_id
         WHERE
             q_id = ?
         SQL
@@ -218,6 +218,25 @@ class QuestionFollow
         followers = []
         result.each {|rep|followers << User.new(rep)}
         followers.length == 1 ? followers.first : followers
+    end
+
+    def self.followed_questions_for_user_id(user_id)
+
+        result = QuestionsDatabase.instance.execute(<<-SQL, user_id)
+        
+        SELECT
+            *
+        FROM
+            questions
+        JOIN
+            question_follows ON questions.id = question_follows.q_id
+        WHERE
+            question_follows.u_id = ?
+        SQL
+
+        questions = []
+        result.each {|res|questions << Question.new(res)}
+        questions.length == 1 ? questions.first : questions
     end
 end
 
