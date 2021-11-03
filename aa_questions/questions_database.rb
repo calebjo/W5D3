@@ -94,7 +94,9 @@ class Question
         SQL
         return nil unless question.length > 0
 
-        question.each {|rep|Question.new(rep)}
+        questions = []
+        question.each {|rep|questions << Question.new(rep)}
+        questions
     end
 
     def author
@@ -128,7 +130,7 @@ class Reply
         SQL
         return nil unless reply.length > 0
 
-        reply.each {|rep|Reply.new(rep)}
+        Reply.new(reply.first)
     end
 
     def self.find_by_user_id(u_id)
@@ -142,7 +144,9 @@ class Reply
         SQL
         return nil unless reply.length > 0
 
-        reply.each {|rep|Reply.new(rep)}
+        replies = []
+        reply.each {|rep|replies << Reply.new(rep)}
+        replies
     end
 
     def self.find_by_question_id(q_id)
@@ -156,7 +160,9 @@ class Reply
         SQL
         return nil unless reply.length > 0
 
-        reply.each {|rep|Reply.new(rep)}
+        replies = []
+        reply.each {|rep|replies << Reply.new(rep)}
+        replies
     end
 
     def author
@@ -172,7 +178,20 @@ class Reply
     end
 
     def child_replies
-        Reply.find_by_id(@id)
+        # Reply.find_by_id(@id)
+        reply = QuestionsDatabase.instance.execute(<<-SQL, @id)
+        SELECT
+            *
+        FROM
+            replies
+        WHERE
+            r_id = ?
+        SQL
+        return nil unless reply.length > 0
+
+        replies = []
+        reply.each {|rep|replies << Reply.new(rep)}
+        replies.length == 1 ? replies.first : replies
     end
 end
 
