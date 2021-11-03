@@ -53,22 +53,34 @@ CREATE TABLE question_likes (
 INSERT INTO
     users (fname, lname) 
 VALUES 
-    ('cal', 'jon'),
-    ('ed', 'fo');
+    ('Caleb', 'Jones'),
+    ('Ed', 'Foti'),
+    ('John', 'Cigale'),
+    ('David', 'Suh');
 
 INSERT INTO
     questions (title, body, u_id) 
 VALUES 
-    ('wigs', 'do you?', (SELECT id FROM users WHERE fname = 'cal')),
-    ('elon', 'for pres?', (SELECT id FROM users WHERE fname = 'ed'));
+    ('wigs', 'do you?', (SELECT id FROM users WHERE fname = 'Caleb')),
+    ('elon', 'for pres?', (SELECT id FROM users WHERE fname = 'Ed'));
+
 
 INSERT INTO
     replies (body, u_id, q_id, r_id) 
 VALUES 
-    ('no', (SELECT id FROM users WHERE fname = 'ed'),(SELECT id FROM questions WHERE title = 'wigs'), NULL);
+    ('no', (SELECT id FROM users WHERE fname = 'Ed'),(SELECT id FROM questions WHERE title = 'wigs'), NULL);
 
 INSERT INTO
     replies (body, u_id, q_id, r_id) 
 VALUES 
-    ('future?', (SELECT id FROM users WHERE fname = 'cal'),(SELECT id FROM questions WHERE title = 'wigs'), (SELECT id FROM replies WHERE body = 'no'));
+    ('future?', (SELECT id FROM users WHERE fname = 'Caleb'),(SELECT id FROM questions WHERE title = 'wigs'), (SELECT id FROM replies WHERE body = 'no'));
     
+INSERT INTO
+    replies (body, u_id, q_id, r_id) 
+VALUES 
+    ('this is a test reply', (SELECT id FROM users WHERE fname = 'Caleb'),(SELECT id FROM questions WHERE title = 'wigs'), (SELECT id FROM replies WHERE body = 'future?'));
+
+INSERT INTO
+    replies (body, u_id, q_id, r_id) 
+VALUES 
+    ('a reply to a test reply', (SELECT id FROM users WHERE fname = 'Caleb'),(SELECT id FROM questions WHERE title = 'wigs'), (SELECT id FROM replies WHERE body = 'this is a test reply'));

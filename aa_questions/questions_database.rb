@@ -32,6 +32,41 @@ class User
 
         User.new(user.first)
     end
+
+    def find_by_name(fname, lname)
+        user = QuestionsDatabase.instance.execute(<<-SQL, fname, lname)
+        SELECT
+            *
+        FROM
+            users
+        WHERE
+            fname = ? AND
+            lname = ?
+        SQL
+        return nil unless user.length > 0
+
+        User.new(user.first)
+    end
+
+    # # use Question::find_by_author_id
+    # def authored_questions
+    #     user = QuestionsDatabase.instance.execute(<<-SQL, fname, lname)
+    #     SELECT
+    #         *
+    #     FROM
+    #         users
+    #     WHERE
+    #         fname = ? AND
+    #         lname = ?
+    #     SQL
+    #     return nil unless user.length > 0
+
+    #     User.new(user.first)
+    # end
+
+    # # use Reply::find_by_user_id
+    # def authored_replies
+    # end
 end
 
 class Question
@@ -99,30 +134,31 @@ class Reply
     end
 
     def find_by_user_id(u_id)
-        reply = QuestionsDatabase.instance.execute(<<-SQL, id)
+        reply = QuestionsDatabase.instance.execute(<<-SQL, u_id)
         SELECT
             *
         FROM
-            reply
+            replies
         WHERE
             u_id = ?
         SQL
-        return nil unless question.length > 0
+        return nil unless reply.length > 0
 
         Reply.new(reply.first)
     end
 
     def find_by_question_id(q_id)
-        reply = QuestionsDatabase.instance.execute(<<-SQL, id)
+        reply = QuestionsDatabase.instance.execute(<<-SQL, q_id)
         SELECT
             *
         FROM
-            reply
+            replies
         WHERE
             q_id = ?
         SQL
-        return nil unless question.length > 0
+        return nil unless reply.length > 0
 
+        
         Reply.new(reply.first)
     end
 end
