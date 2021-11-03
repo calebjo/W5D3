@@ -57,6 +57,20 @@ class Question
 
         Question.new(question.first)
     end
+
+    def find_by_author_id(id)
+        question = QuestionsDatabase.instance.execute(<<-SQL, id)
+        SELECT
+            *
+        FROM
+            questions
+        WHERE
+            u_id = ?
+        SQL
+        return nil unless question.length > 0
+
+        Question.new(question.first)
+    end
 end
 
 class Reply
@@ -80,6 +94,34 @@ class Reply
             id = ?
         SQL
         return nil unless reply.length > 0
+
+        Reply.new(reply.first)
+    end
+
+    def find_by_user_id(u_id)
+        reply = QuestionsDatabase.instance.execute(<<-SQL, id)
+        SELECT
+            *
+        FROM
+            reply
+        WHERE
+            u_id = ?
+        SQL
+        return nil unless question.length > 0
+
+        Reply.new(reply.first)
+    end
+
+    def find_by_question_id(q_id)
+        reply = QuestionsDatabase.instance.execute(<<-SQL, id)
+        SELECT
+            *
+        FROM
+            reply
+        WHERE
+            q_id = ?
+        SQL
+        return nil unless question.length > 0
 
         Reply.new(reply.first)
     end
