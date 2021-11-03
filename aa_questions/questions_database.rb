@@ -100,6 +100,10 @@ class Question
     def author
         User.find_by_id(@u_id)
     end
+
+    def replies
+        Reply.find_by_question_id(@id)
+    end
 end
 
 class Reply
@@ -124,7 +128,7 @@ class Reply
         SQL
         return nil unless reply.length > 0
 
-        Reply.new(reply.first)
+        reply.each {|rep|Reply.new(rep)}
     end
 
     def self.find_by_user_id(u_id)
@@ -153,6 +157,22 @@ class Reply
         return nil unless reply.length > 0
 
         reply.each {|rep|Reply.new(rep)}
+    end
+
+    def author
+        User.find_by_id(@u_id)
+    end
+
+    def question
+        Question.find_by_id(@q_id)
+    end
+
+    def parent_reply
+        Reply.find_by_id(@r_id)
+    end
+
+    def child_replies
+        Reply.find_by_id(@id)
     end
 end
 
